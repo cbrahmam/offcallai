@@ -1,0 +1,23 @@
+# Lint configuration for the backend.
+#
+# The selected set is deliberately narrow: rules that catch real defects
+# (undefined names, broken f-strings, duplicate keys, unreachable code) rather
+# than formatting. The codebase has a large backlog of style findings under
+# ruff's default set; widening this selection is a good first contribution, but
+# it should be done in its own pass so CI stays meaningful in the meantime.
+
+target-version = "py311"
+line-length = 120
+
+exclude = ["alembic/versions", ".venv", "venv"]
+
+[lint]
+select = [
+    "E9",    # syntax / IO errors
+    "F63",   # comparison mistakes (e.g. `is` on literals)
+    "F7",    # syntax-adjacent bugs (break outside loop, etc.)
+    "F82",   # undefined names
+    "F811",  # redefinition of an unused name
+    "F502",  # percent-format mistakes
+    "F601",  # `in` with a non-container
+]

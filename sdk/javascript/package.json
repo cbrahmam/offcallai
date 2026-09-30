@@ -1,0 +1,54 @@
+{
+  "name": "@offcallai/errors",
+  "version": "1.0.0",
+  "description": "OffCall AI JavaScript Error Tracking SDK - Capture and track errors in your web applications",
+  "main": "dist/offcall-errors.js",
+  "module": "dist/offcall-errors.esm.js",
+  "browser": "dist/offcall-errors.min.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:esm && npm run build:browser",
+    "build:cjs": "cp offcall-errors.js dist/offcall-errors.js",
+    "build:esm": "node scripts/build-esm.js",
+    "build:browser": "terser offcall-errors.js -o dist/offcall-errors.min.js -c -m",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/offcall-ai/offcall-javascript.git"
+  },
+  "keywords": [
+    "error-tracking",
+    "monitoring",
+    "observability",
+    "offcall",
+    "offcallai",
+    "error-reporting",
+    "exception-handling",
+    "crash-reporting",
+    "apm",
+    "debugging"
+  ],
+  "author": "OffCall AI <noreply@example.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/offcall-ai/offcall-javascript/issues"
+  },
+  "homepage": "https://github.com/cbrahmam/offcallai/blob/main/sdk/javascript/README.md",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "terser": "^5.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

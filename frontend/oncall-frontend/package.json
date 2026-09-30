@@ -1,0 +1,64 @@
+{
+  "name": "offcall-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@tanstack/react-query": "^5.83.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.126",
+    "@types/react-helmet": "^6.1.11",
+    "axios": "^1.11.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.31.0",
+    "lucide-react": "^0.563.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-helmet": "^6.1.0",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.7.1",
+    "react-scripts": "^5.0.1",
+    "reactflow": "^11.11.4",
+    "recharts": "^3.1.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "CI=false react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  }
+}

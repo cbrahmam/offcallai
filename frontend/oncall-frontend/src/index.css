@@ -1,0 +1,318 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Make logo black backgrounds blend with the page */
+img[src*="logo-full"], img[src*="logo-small"],
+img[src*="logo-192"], img[src*="logo-512"] {
+  mix-blend-mode: lighten;
+}
+
+@layer base {
+  /* Posh black & white dark theme - Lightened for less harshness */
+  :root {
+    --background: 0 0% 7%;          /* #121212 - lifted more */
+    --foreground: 0 0% 93%;         /* #EDEDED - brighter text */
+    --card: 0 0% 11%;               /* #1C1C1C */
+    --card-foreground: 0 0% 93%;
+    --popover: 0 0% 13%;            /* #212121 - elevated */
+    --popover-foreground: 0 0% 93%;
+
+    /* PRIMARY - Clean white for CTAs */
+    --primary: 0 0% 100%;           /* #FFFFFF */
+    --primary-foreground: 0 0% 0%;  /* Black text on white */
+
+    --secondary: 0 0% 14%;          /* #242424 */
+    --secondary-foreground: 0 0% 85%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 55%;   /* #8C8C8C - brighter muted */
+    --accent: 0 0% 20%;             /* More visible hover */
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* MORE VISIBLE BORDERS */
+    --border: 0 0% 22%;             /* #383838 - more visible */
+    --input: 0 0% 22%;
+    --ring: 0 0% 60%;               /* Gray focus ring */
+    --radius: 0.5rem;
+
+    --chart-1: 0 0% 100%;
+    --chart-2: 173 80% 40%;
+    --chart-3: 43 96% 56%;
+    --chart-4: 0 0% 60%;
+    --chart-5: 0 0% 40%;
+
+    /* Sidebar - slightly lighter */
+    --sidebar-background: 0 0% 6%;  /* #0F0F0F */
+    --sidebar-foreground: 0 0% 93%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 16%;
+    --sidebar-accent-foreground: 0 0% 93%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 0 0% 60%;
+
+    --toast-background: 0 0% 11%;
+    --toast-foreground: 0 0% 93%;
+    --toast-border: 0 0% 22%;
+    --toast-muted: 0 0% 55%;
+  }
+
+  /* Dark mode - same values for consistency */
+  .dark {
+    --background: 0 0% 7%;          /* #121212 - lifted more */
+    --foreground: 0 0% 93%;         /* #EDEDED - brighter text */
+    --card: 0 0% 11%;               /* #1C1C1C */
+    --card-foreground: 0 0% 93%;
+    --popover: 0 0% 13%;            /* #212121 - elevated */
+    --popover-foreground: 0 0% 93%;
+
+    /* PRIMARY - Clean white for CTAs */
+    --primary: 0 0% 100%;           /* #FFFFFF */
+    --primary-foreground: 0 0% 0%;  /* Black text on white */
+
+    --secondary: 0 0% 14%;          /* #242424 */
+    --secondary-foreground: 0 0% 85%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 55%;   /* #8C8C8C - brighter muted */
+    --accent: 0 0% 20%;             /* More visible hover */
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* MORE VISIBLE BORDERS */
+    --border: 0 0% 22%;             /* #383838 - more visible */
+    --input: 0 0% 22%;
+    --ring: 0 0% 60%;               /* Gray focus ring */
+
+    /* Sidebar - slightly lighter */
+    --sidebar-background: 0 0% 6%;  /* #0F0F0F */
+    --sidebar-foreground: 0 0% 93%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 16%;
+    --sidebar-accent-foreground: 0 0% 93%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 0 0% 60%;
+
+    --toast-background: 0 0% 11%;
+    --toast-foreground: 0 0% 93%;
+    --toast-border: 0 0% 22%;
+    --toast-muted: 0 0% 55%;
+  }
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+* {
+  font-family: inherit;
+}
+
+main {
+  overflow-anchor: none;
+}
+
+main.overflow-auto {
+  scroll-behavior: auto;
+  overflow-anchor: none;
+}
+
+/* Toast notification animations */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-out-right {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes shrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes pulse-notification {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.45s ease-out;
+}
+
+.animate-slide-out-right {
+  animation: slide-out-right 0.45s ease-in;
+}
+
+.animate-progress {
+  animation: progress linear;
+}
+
+.animate-pulse-notification {
+  animation: pulse-notification 2s infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* Notification badge bounce */
+@keyframes bounce-notification {
+  0%, 20%, 53%, 80%, 100% { transform: translate3d(0, 0, 0); }
+  40%, 43% { transform: translate3d(0, -6px, 0); }
+  70% { transform: translate3d(0, -3px, 0); }
+  90% { transform: translate3d(0, -1px, 0); }
+}
+
+.animate-bounce-notification {
+  animation: bounce-notification 1s ease;
+}
+
+/* Notification transition classes */
+.notification-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 450ms, transform 450ms;
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 450ms, transform 450ms;
+}
+
+/* Scrollbar - minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.notification-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notification-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+/* Status indicators - flat monochrome with subtle color */
+.status-critical { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+.status-high { background: rgba(249, 115, 22, 0.1); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.2); }
+.status-medium { background: rgba(234, 179, 8, 0.1); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.2); }
+.status-low { background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); }
+.status-healthy { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+/* Loading skeleton shimmer - subtle */
+@keyframes loading-shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.notification-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.notification-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+  animation: loading-shimmer 1.5s infinite;
+}
+
+/* Elevation system - posh shadows for depth */
+.elevation-1 {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 1px 2px rgba(0,0,0,0.3);
+}
+.elevation-2 {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 4px 12px rgba(0,0,0,0.4);
+}
+.elevation-3 {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.5);
+}
+.glow-white {
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}

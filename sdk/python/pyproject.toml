@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "offcall-errors"
+version = "1.0.0"
+description = "OffCall AI Python Error Tracking SDK"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "OffCall AI", email = "noreply@example.com"}
+]
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Bug Tracking",
+    "Topic :: System :: Monitoring",
+]
+keywords = ["error-tracking", "monitoring", "observability", "offcall", "offcallai"]
+dependencies = []
+
+[project.optional-dependencies]
+flask = ["flask>=1.0"]
+django = ["django>=2.0"]
+fastapi = ["fastapi>=0.50", "starlette>=0.12"]
+all = ["flask>=1.0", "django>=2.0", "fastapi>=0.50", "starlette>=0.12"]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "pytest-asyncio>=0.18",
+    "black>=21.0",
+    "isort>=5.0",
+    "mypy>=0.900",
+    "flask>=1.0",
+    "django>=2.0",
+    "fastapi>=0.50",
+]
+
+[project.urls]
+Homepage = "https://github.com/cbrahmam/offcallai"
+Documentation = "https://github.com/cbrahmam/offcallai/blob/main/sdk/python/README.md"
+Repository = "https://github.com/offcall-ai/offcall-python"
+"Bug Tracker" = "https://github.com/offcall-ai/offcall-python/issues"
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py37", "py38", "py39", "py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

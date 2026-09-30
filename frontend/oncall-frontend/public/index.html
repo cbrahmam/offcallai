@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="description" content="OffCall AI - open-source incident response and observability platform." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo-small.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <title>OffCall AI</title>
+
+    <!--
+      Optional: trace this UI with OffCall's own RUM SDK.
+      Enable by setting REACT_APP_RUM_API_KEY (create a key under Browser RUM,
+      or POST /api/v1/rum/applications) before building.
+    -->
+    <script src="%PUBLIC_URL%/offcall-rum.js"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script>
+      (function () {
+        var apiKey = '%REACT_APP_RUM_API_KEY%';
+        var endpoint = '%REACT_APP_API_URL%';
+
+        // CRA leaves the placeholder untouched when the variable is unset.
+        if (typeof OffCallRUM === 'undefined') return;
+        if (!apiKey || apiKey.charAt(0) === '%') return;
+        if (!endpoint || endpoint.charAt(0) === '%') endpoint = window.location.origin + '/api/v1';
+
+        OffCallRUM.init({
+          apiKey: apiKey,
+          appName: 'offcall-frontend',
+          endpoint: endpoint.replace(/\/$/, '') + '/rum/ingest/batch',
+          environment: window.location.hostname === 'localhost' ? 'development' : 'production',
+          sampleRate: 1.0,
+          trackErrors: true,
+          trackPerformance: true,
+          trackActions: true
+        });
+      })();
+    </script>
+  </body>
+</html>

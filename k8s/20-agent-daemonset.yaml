@@ -1,0 +1,170 @@
+# OffCall AI Agent DaemonSet
+# Deploys the agent on every node in the cluster
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: offcall-agent
+  namespace: offcall-ai
+  labels:
+    app: offcall-agent
+    component: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: offcall-agent
+  template:
+    metadata:
+      labels:
+        app: offcall-agent
+    spec:
+      serviceAccountName: offcall-agent
+      hostNetwork: true
+      hostPID: true
+      containers:
+        - name: agent
+          image: ghcr.io/cbrahmam/offcall-agent:latest
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          env:
+            - name: OFFCALL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: offcall-agent-secrets
+                  key: api-key
+            - name: OFFCALL_API_ENDPOINT
+              value: "http://offcall-backend.offcall-ai.svc.cluster.local:8000/api/v1/metrics/ingest"
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: OFFCALL_K8S_CLUSTER_ID
+              value: ""  # Set to your registered cluster ID
+            - name: OFFCALL_K8S_CLUSTER_NAME
+              value: "offcall-ai"
+            - name: OFFCALL_K8S_SYNC_INTERVAL
+              value: "30s"
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+              readOnly: true
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: sys
+              mountPath: /host/sys
+              readOnly: true
+            - name: config
+              mountPath: /etc/offcall-agent
+            - name: buffer
+              mountPath: /var/lib/offcall-agent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: config
+          configMap:
+            name: offcall-agent-config
+        - name: buffer
+          emptyDir: {}
+      tolerations:
+        - operator: Exists
+          effect: NoSchedule
+        - operator: Exists
+          effect: NoExecute
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: offcall-agent
+  namespace: offcall-ai
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: offcall-agent
+rules:
+  - apiGroups: [""]
+    resources: ["nodes", "pods", "services", "events", "namespaces", "endpoints"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "daemonsets", "replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["nodes", "pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: offcall-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: offcall-agent
+subjects:
+  - kind: ServiceAccount
+    name: offcall-agent
+    namespace: offcall-ai
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: offcall-agent-config
+  namespace: offcall-ai
+data:
+  agent.yaml: |
+    api:
+      endpoint: http://offcall-backend.offcall-ai.svc.cluster.local:8000/api/v1/metrics/ingest
+      api_key: ${OFFCALL_API_KEY}
+      timeout: 10s
+
+    collection:
+      interval: 10s
+      batch_size: 100
+
+    collectors:
+      cpu: true
+      memory: true
+      disk: true
+      network: true
+      processes: true
+      docker: true
+      kubernetes: true
+
+    kubernetes:
+      enabled: true
+      sync_interval: 30s
+
+    profiling:
+      enabled: false
+      interval: 60s
+      upload_endpoint: /api/v1/profiles/upload
+      targets: []
+
+    tags:
+      environment: production
+      cluster: offcall-ai
+
+    buffer:
+      enabled: true
+      max_size: 10000
+      flush_interval: 30s
+      file_path: /var/lib/offcall-agent/buffer.json
+
+    logging:
+      level: info
+      format: json

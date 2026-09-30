@@ -1,0 +1,103 @@
+# OffCall AI Agent Configuration
+# https://github.com/cbrahmam/offcallai/blob/main/agent/README.md
+
+api:
+  # API endpoint for metric ingestion
+  endpoint: http://localhost:8000/api/v1/metrics/ingest
+  # Your API key (or use OFFCALL_API_KEY environment variable)
+  api_key: ${OFFCALL_API_KEY}
+  # Request timeout
+  timeout: 10s
+
+collection:
+  # How often to collect and send metrics
+  interval: 10s
+  # Maximum metrics per batch
+  batch_size: 100
+
+# Enable/disable specific collectors
+collectors:
+  cpu: true
+  memory: true
+  disk: true
+  network: true
+  processes: true
+  docker: true  # Auto-detects Docker; set false to disable
+
+# Tags applied to all metrics from this host
+tags:
+  # environment: production
+  # service: api-server
+  # region: us-east-1
+
+# Log Collection
+logs:
+  enabled: false  # Set to true to enable log collection
+  batch_size: 100       # Max logs per batch
+  flush_interval: 5s    # How often to send logs
+  buffer_size: 10000    # Internal buffer size
+
+  # Log sources to collect from
+  sources:
+    # Example: Collect from syslog
+    # - name: syslog
+    #   path: /var/log/syslog
+    #   service: system
+    #   format: syslog      # auto, json, syslog, plain
+    #   tags:
+    #     source_type: syslog
+
+    # Example: Collect from application logs
+    # - name: app-logs
+    #   path: /var/log/myapp/*.log   # Supports glob patterns
+    #   service: myapp
+    #   format: json        # or auto to detect
+    #   multiline: false
+    #   include:            # Regex patterns to include (optional)
+    #     - "error|warn|critical"
+    #   exclude:            # Regex patterns to exclude (optional)
+    #     - "health_check"
+    #   tags:
+    #     team: backend
+
+    # Example: Collect from Docker container logs
+    # - name: docker-app
+    #   path: /var/lib/docker/containers/*/*.log
+    #   service: docker-app
+    #   format: json
+
+# Continuous Profiling (pprof scraping)
+profiling:
+  enabled: false  # Set to true to enable profiling
+  interval: 60s   # How often to collect profiles
+  upload_endpoint: /api/v1/profiles/upload
+
+  # Targets to scrape (pprof endpoints)
+  targets:
+    # Example: Scrape a Go application exposing pprof on port 6060
+    # - name: my-api-server
+    #   url: http://localhost:6060
+    #   service: api-server
+    #   environment: production
+    #   profile_types:
+    #     - cpu     # CPU profile (30s sample)
+    #     - heap    # Heap/memory profile
+    #     - goroutine  # Goroutine profile
+    #     - block   # Block profile
+    #     - mutex   # Mutex contention profile
+    #   cpu_duration: 30s  # Duration for CPU profiles
+    #   labels:
+    #     team: backend
+    #     version: v1.2.3
+
+# Local buffer for resilience when API is unavailable
+buffer:
+  enabled: true
+  max_size: 10000        # Maximum buffered metrics
+  flush_interval: 30s    # How often to retry sending buffered metrics
+  file_path: /var/lib/offcall-agent/buffer.json
+
+# Logging configuration
+logging:
+  level: info            # debug, info, warn, error
+  format: json           # json or text

@@ -1,0 +1,36 @@
+# Hardening for Apache deployments. The bundled Docker image serves the app
+# through nginx instead -- see nginx-security.conf for the equivalent there.
+
+# Block source maps and build files
+<Files "*.map">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block environment files
+<Files ".env*">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block build artifacts, but the PWA manifest must stay reachable.
+<Files "*.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "manifest.json">
+    Order allow,deny
+    Allow from all
+</Files>
+
+# Block TypeScript files
+<Files "*.ts">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.tsx">
+    Order allow,deny
+    Deny from all
+</Files>

@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: offcall-backend
+  namespace: offcall-ai
+  labels:
+    app: offcall-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: offcall-backend
+  template:
+    metadata:
+      labels:
+        app: offcall-backend
+    spec:
+      # Apply database migrations before any replica starts serving.
+      initContainers:
+        - name: migrate
+          image: ghcr.io/cbrahmam/offcall-backend:latest
+          command: ["alembic", "upgrade", "head"]
+          envFrom:
+            - configMapRef:
+                name: offcall-config
+            - secretRef:
+                name: offcall-secrets
+      containers:
+        - name: backend
+          image: ghcr.io/cbrahmam/offcall-backend:latest
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: offcall-config
+            - secretRef:
+                name: offcall-secrets
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: offcall-backend
+  namespace: offcall-ai
+spec:
+  selector:
+    app: offcall-backend
+  ports:
+    - port: 8000
+      targetPort: http
+      name: http

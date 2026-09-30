@@ -1,0 +1,77 @@
+# Based on your WORKING requirements.txt + essential webhook dependencies
+# FastAPI Core
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Database
+sqlalchemy==2.0.32
+greenlet==3.0.3  # required by SQLAlchemy's asyncio support
+alembic==1.13.1
+asyncpg==0.29.0
+redis==5.0.1
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+pydantic[email]==2.5.0
+pydantic-settings==2.1.0
+
+# MFA Dependencies
+pyotp==2.9.0
+qrcode[pil]==7.4.2
+
+# HTTP & Utilities
+requests==2.31.0
+python-dotenv==1.0.0
+pytz>=2024.1
+
+# Database driver
+psycopg2-binary
+
+# Slack integration
+slack-sdk==3.27.1
+
+# Security
+bcrypt==4.0.1
+# Monitoring integrations
+aiohttp==3.9.1
+requests==2.31.0
+
+# Monitoring integrations
+aiohttp==3.9.1
+requests==2.31.0
+
+# AI Integration Dependencies (Added by build script)
+anthropic>=0.18.0                # Claude Code integration
+google-generativeai>=0.5.0       # Gemini CLI integration  
+aiohttp>=3.9.0                   # Async HTTP for AI APIs
+asyncio-throttle>=1.0.2          # Rate limiting for AI calls
+cachetools>=5.3.0                # AI response caching
+tenacity>=8.2.0                  # Retry logic for AI APIs
+tiktoken>=0.6.0                  # Token counting for cost optimization
+structlog>=23.1.0                # Structured logging for AI operations  
+prometheus-client>=0.20.0        # Metrics for AI performance
+httpx>=0.27.0                    # Modern HTTP client
+python-dateutil>=2.8.2          # Date parsing
+pydantic[email]>=2.5.0           # Enhanced validation
+typing-extensions>=4.8.0         # Type hints support
+
+cachetools>=5.3.0
+docker==6.1.3
+
+httpx==0.27.0
+boto3==1.34.149
+
+azure-communication-sms
+azure-communication-email
+psutil
+
+opencensus-ext-azure
+opencensus-ext-logging
+azure-monitor-query
+azure-identity
+
+# Sentry SDK for error tracking (sends to OffCall test backend)
+sentry-sdk[fastapi]>=1.40.0
+

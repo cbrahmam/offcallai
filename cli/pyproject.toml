@@ -1,0 +1,97 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "offcall-cli"
+version = "1.0.1"
+description = "OffCall AI Command Line Interface - Manage incidents, alerts, and deployments from your terminal"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    {name = "OffCall AI", email = "noreply@example.com"}
+]
+maintainers = [
+    {name = "OffCall AI", email = "noreply@example.com"}
+]
+keywords = [
+    "offcall",
+    "incident-management",
+    "monitoring",
+    "observability",
+    "alerting",
+    "on-call",
+    "devops",
+    "sre",
+    "cli",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "click>=8.0",
+    "rich>=12.0",
+    "httpx>=0.23",
+    "pyyaml>=6.0",
+    "python-dateutil>=2.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/cbrahmam/offcallai"
+Documentation = "https://github.com/cbrahmam/offcallai/blob/main/cli/README.md"
+Repository = "https://github.com/offcall-ai/offcall-cli"
+Issues = "https://github.com/offcall-ai/offcall-cli/issues"
+Changelog = "https://github.com/offcall-ai/offcall-cli/blob/main/CHANGELOG.md"
+
+[project.scripts]
+offcall = "offcall.cli:main"
+
+[tool.setuptools]
+packages = ["offcall", "offcall.commands"]
+
+[tool.setuptools.package-data]
+offcall = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=offcall --cov-report=term-missing"

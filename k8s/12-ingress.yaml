@@ -1,0 +1,39 @@
+# Example ingress. Adjust the ingressClassName, hosts and TLS secret for your
+# cluster; with cert-manager, keep the annotation and it will issue the cert.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: offcall
+  namespace: offcall-ai
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - offcall.example.com
+        - offcall-api.example.com
+      secretName: offcall-tls
+  rules:
+    - host: offcall.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: offcall-frontend
+                port:
+                  number: 80
+    - host: offcall-api.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: offcall-backend
+                port:
+                  number: 8000

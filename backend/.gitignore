@@ -1,0 +1,20 @@
+*.env
+*.env.local
+*.env.production
+backend/.env
+
+# Environment files (security)
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+
+# Secrets and keys
+*.key
+*.pem
+secrets/
+config/production.json
+
+# Kubernetes
+k8s-secrets.yaml

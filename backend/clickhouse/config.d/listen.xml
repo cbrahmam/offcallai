@@ -1,0 +1,7 @@
+<!--
+  The official image ships <listen_host>::</listen_host>, which fails on hosts
+  or Docker networks without IPv6. Bind IPv4 explicitly instead.
+-->
+<clickhouse>
+    <listen_host>0.0.0.0</listen_host>
+</clickhouse>

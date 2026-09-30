@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: offcall-config
+  namespace: offcall-ai
+data:
+  ENVIRONMENT: "production"
+  DEBUG: "false"
+
+  # Replace with the URLs you actually serve on. Links in Slack messages and
+  # emails, plus the agent install snippet, are built from these.
+  API_URL: "https://offcall-api.example.com"
+  FRONTEND_URL: "https://offcall.example.com"
+  CORS_ORIGINS: "https://offcall.example.com"
+  ALLOWED_HOSTS: "offcall-api.example.com,offcall-backend,localhost,127.0.0.1"
+
+  # Required for metrics, logs, traces, RUM and profiling.
+  CLICKHOUSE_ENABLED: "true"
+  CLICKHOUSE_HOST: "clickhouse"
+  CLICKHOUSE_PORT: "8123"
+  CLICKHOUSE_USER: "default"
+  CLICKHOUSE_DATABASE: "offcall"
+  CLICKHOUSE_USE_SSL: "false"
+
+  FROM_EMAIL: "offcall@example.com"
+  SMTP_HOST: ""
+  SMTP_PORT: "587"
+  SMTP_USERNAME: ""
+
+  # Emails allowed to reach /api/v1/admin/* (comma-separated).
+  SUPER_ADMIN_EMAILS: ""

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OffCall JavaScript SDK Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 { color: #00d4ff; }
+        .card {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        input, button {
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            font-size: 14px;
+        }
+        input {
+            background: #0f0f23;
+            color: #fff;
+            width: 300px;
+        }
+        button {
+            background: #00d4ff;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #00a8cc; }
+        button.danger { background: #ff4757; color: #fff; }
+        button.danger:hover { background: #ff6b81; }
+        #log {
+            background: #0f0f23;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .success { color: #2ed573; }
+        .error { color: #ff4757; }
+        .info { color: #00d4ff; }
+    </style>
+</head>
+<body>
+    <h1>🔍 OffCall JavaScript SDK Test</h1>
+
+    <div class="card">
+        <h3>1. Configuration</h3>
+        <div>
+            <input type="text" id="apiKey" placeholder="Enter your API key (ofc_xxx)">
+        </div>
+        <div>
+            <input type="text" id="endpoint" placeholder="Endpoint (optional, uses default)">
+        </div>
+        <button onclick="initSDK()">Initialize SDK</button>
+    </div>
+
+    <div class="card">
+        <h3>2. Test Functions</h3>
+        <button onclick="setTestUser()">Set User Context</button>
+        <button onclick="addTestBreadcrumb()">Add Breadcrumb</button>
+        <button onclick="sendTestMessage()">Send Message</button>
+        <button onclick="sendTestError()" class="danger">Send Test Error</button>
+        <button onclick="triggerUncaughtError()" class="danger">Trigger Uncaught Error</button>
+    </div>
+
+    <div class="card">
+        <h3>3. Console Output</h3>
+        <div id="log"></div>
+    </div>
+
+    <script src="javascript/offcall-errors.js"></script>
+    <script>
+        const logEl = document.getElementById('log');
+
+        function log(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const className = type;
+            logEl.innerHTML += `<span class="${className}">[${time}] ${message}</span>\n`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        // Override console for debug output
+        const origLog = console.log;
+        const origWarn = console.warn;
+        const origError = console.error;
+
+        console.log = (...args) => {
+            origLog(...args);
+            if (args[0]?.includes?.('[OffCall]')) {
+                log(args.join(' '), 'success');
+            }
+        };
+        console.warn = (...args) => {
+            origWarn(...args);
+            log('WARN: ' + args.join(' '), 'error');
+        };
+        console.error = (...args) => {
+            origError(...args);
+            log('ERROR: ' + args.join(' '), 'error');
+        };
+
+        function initSDK() {
+            const apiKey = document.getElementById('apiKey').value;
+            const endpoint = document.getElementById('endpoint').value;
+
+            if (!apiKey) {
+                log('Please enter an API key', 'error');
+                return;
+            }
+
+            const config = {
+                apiKey: apiKey,
+                environment: 'test',
+                release: '1.0.0-test',
+                service: 'sdk-test-browser',
+                debug: true,
+            };
+
+            if (endpoint) {
+                config.endpoint = endpoint;
+            }
+
+            log(`Initializing SDK with key: ${apiKey.substring(0, 10)}...`, 'info');
+            OffCallErrors.init(config);
+            log('SDK initialized successfully!', 'success');
+        }
+
+        function setTestUser() {
+            if (!OffCallErrors.isReady()) {
+                log('SDK not initialized. Click "Initialize SDK" first.', 'error');
+                return;
+            }
+
+            OffCallErrors.setUser({
+                id: 'test-user-456',
+                email: 'browser-test@example.com',
+                name: 'Browser Test User',
+            });
+            log('User context set', 'success');
+        }
+
+        function addTestBreadcrumb() {
+            if (!OffCallErrors.isReady()) {
+                log('SDK not initialized', 'error');
+                return;
+            }
+
+            OffCallErrors.addBreadcrumb({
+                type: 'user',
+                category: 'test',
+                message: 'Test breadcrumb from browser',
+                data: { button: 'addTestBreadcrumb' },
+            });
+            log('Breadcrumb added', 'success');
+        }
+
+        function sendTestMessage() {
+            if (!OffCallErrors.isReady()) {
+                log('SDK not initialized', 'error');
+                return;
+            }
+
+            log('Sending test message...', 'info');
+            OffCallErrors.captureMessage('SDK test message from browser', 'info');
+        }
+
+        function sendTestError() {
+            if (!OffCallErrors.isReady()) {
+                log('SDK not initialized', 'error');
+                return;
+            }
+
+            log('Sending test exception...', 'info');
+            try {
+                throw new Error('SDK test error - this is a test from the browser');
+            } catch (e) {
+                OffCallErrors.captureException(e);
+            }
+        }
+
+        function triggerUncaughtError() {
+            if (!OffCallErrors.isReady()) {
+                log('SDK not initialized', 'error');
+                return;
+            }
+
+            log('Triggering uncaught error (check Network tab)...', 'info');
+            setTimeout(() => {
+                throw new Error('Uncaught test error - auto-captured by SDK');
+            }, 100);
+        }
+
+        log('Page loaded. Enter your API key and click "Initialize SDK" to begin.', 'info');
+    </script>
+</body>
+</html>
